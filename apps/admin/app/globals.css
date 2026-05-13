@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: Vazirmatn, Estedad, ui-sans-serif, system-ui, sans-serif;
+}
+
+html { direction: rtl; }
+body { margin: 0; background: #f8fafc; color: #0f172a; }
+* { box-sizing: border-box; }

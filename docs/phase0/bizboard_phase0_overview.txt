@@ -1,0 +1,19 @@
+فاز صفر بیزبورد ساخته شد.
+
+این بسته شامل موارد اجرایی لازم قبل از ساخت MVP است:
+- چک‌لیست Go/No-Go
+- قفل دامنه MVP
+- معماری کلان
+- ERD Mermaid
+- SQL migration اولیه PostgreSQL
+- seed دسته‌بندی‌های فاز اول
+- OpenAPI اولیه
+- فایل‌های AI_CONTEXT و AI_CODING_RULES برای ساخت پروژه با AI
+- وایرفریم صفحات اصلی
+- طراحی اولیه پنل ادمین و کسب‌وکار
+- Docker Compose dev و env.example
+- چک‌لیست SEO، Payment/Ledger، Security و QA
+- backlog پیشنهادی Sprintها
+- اسکلت monorepo
+
+نکته: این فاز صفر عمداً پروژه را مثل WordPress/MySQL نمی‌سازد. مدل دیتابیس بر اساس PostgreSQL و موجودیت‌های واقعی بیزبورد طراحی شده است: user، business، merchant، product، offer، order، payment، ledger، AI conversation، crawler item و SEO page.

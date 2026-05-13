@@ -1,0 +1,63 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: bizboard-postgres
+    environment:
+      POSTGRES_USER: bizboard
+      POSTGRES_PASSWORD: bizboard_dev_password
+      POSTGRES_DB: bizboard
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ../04_DATABASE:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bizboard -d bizboard"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: bizboard-redis
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+
+  api:
+    build:
+      context: ../14_PROJECT_SCAFFOLD
+      dockerfile: apps/api/Dockerfile
+    container_name: bizboard-api
+    env_file:
+      - .env.example
+    environment:
+      DATABASE_URL: postgresql://bizboard:bizboard_dev_password@postgres:5432/bizboard
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "3001:3001"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    profiles: ["apps"]
+
+  web:
+    build:
+      context: ../14_PROJECT_SCAFFOLD
+      dockerfile: apps/web/Dockerfile
+    container_name: bizboard-web
+    env_file:
+      - .env.example
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    profiles: ["apps"]
+
+volumes:
+  postgres_data:
+  redis_data:

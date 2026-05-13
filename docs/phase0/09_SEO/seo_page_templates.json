@@ -1,0 +1,63 @@
+{
+  "category_page": {
+    "blocks": [
+      "breadcrumb",
+      "h1",
+      "intro",
+      "ai_chat_context",
+      "filters",
+      "product_grid",
+      "best_table",
+      "buying_guide",
+      "brand_comparison",
+      "faq",
+      "internal_links",
+      "schema_jsonld"
+    ],
+    "quality_gate": {
+      "min_products": 12,
+      "min_intro_chars": 250,
+      "min_faq": 3,
+      "requires_human_review_if_ai_generated": true
+    }
+  },
+  "product_page": {
+    "blocks": [
+      "breadcrumb",
+      "product_header",
+      "ai_summary",
+      "offer_table",
+      "specs",
+      "pros_cons",
+      "price_history",
+      "similar_products",
+      "reviews",
+      "qa",
+      "faq",
+      "schema_jsonld"
+    ],
+    "quality_gate": {
+      "min_offers_or_manual_review": 1,
+      "requires_canonical": true
+    }
+  },
+  "business_page": {
+    "blocks": [
+      "hero",
+      "trust",
+      "products",
+      "reviews",
+      "working_hours",
+      "contact",
+      "map",
+      "faq",
+      "policies",
+      "schema_jsonld"
+    ],
+    "quality_gate": {
+      "requires_name": true,
+      "requires_contact_or_url": true,
+      "requires_description": true
+    }
+  }
+}

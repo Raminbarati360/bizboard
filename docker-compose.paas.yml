@@ -1,0 +1,172 @@
+name: bizboard-paas
+
+# ParsPack PaaS Docker Compose
+# Important: no build: and no bind-mount volumes. Images must be built/pushed by CI first.
+
+services:
+  web:
+    image: ${IMAGE_REGISTRY}/web:${IMAGE_TAG:-staging}
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      NEXT_PUBLIC_WEB_URL: ${NEXT_PUBLIC_WEB_URL}
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+    depends_on:
+      api:
+        condition: service_started
+    ports:
+      - "3000:3000"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  admin:
+    image: ${IMAGE_REGISTRY}/admin:${IMAGE_TAG:-staging}
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      NEXT_PUBLIC_WEB_URL: ${NEXT_PUBLIC_WEB_URL}
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+      NEXT_PUBLIC_ADMIN_URL: ${NEXT_PUBLIC_ADMIN_URL}
+    depends_on:
+      api:
+        condition: service_started
+    ports:
+      - "3001:3001"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3001/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  api:
+    image: ${IMAGE_REGISTRY}/api:${IMAGE_TAG:-staging}
+    restart: unless-stopped
+    command:
+      - sh
+      - -lc
+      - |
+        if [ "${RUN_MIGRATIONS_ON_START:-true}" = "true" ]; then
+          pnpm --filter @bizboard/database migrate && pnpm --filter @bizboard/database seed;
+        fi
+        node apps/api/dist/main.js
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      RUN_MIGRATIONS_ON_START: ${RUN_MIGRATIONS_ON_START:-true}
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+      API_CORS_ORIGINS: ${API_CORS_ORIGINS}
+      SENTRY_DSN: ${SENTRY_DSN:-}
+      AI_DEFAULT_PROVIDER: ${AI_DEFAULT_PROVIDER:-gapgpt}
+      AI_DEFAULT_CHAT_MODEL: ${AI_DEFAULT_CHAT_MODEL:-gpt-4o-mini}
+      AI_DEFAULT_EMBEDDING_PROVIDER: ${AI_DEFAULT_EMBEDDING_PROVIDER:-gapgpt}
+      AI_DEFAULT_EMBEDDING_MODEL: ${AI_DEFAULT_EMBEDDING_MODEL:-text-embedding-3-small}
+      AI_ALLOW_PROVIDER_FALLBACK: ${AI_ALLOW_PROVIDER_FALLBACK:-false}
+      AI_LOG_PROMPTS: ${AI_LOG_PROMPTS:-true}
+      AI_LOG_RESPONSES: ${AI_LOG_RESPONSES:-false}
+      AI_REQUEST_TIMEOUT_MS: ${AI_REQUEST_TIMEOUT_MS:-60000}
+      AI_MAX_RETRIES: ${AI_MAX_RETRIES:-2}
+      GAPGPT_API_KEY: ${GAPGPT_API_KEY:-}
+      GAPGPT_BASE_URL: ${GAPGPT_BASE_URL:-https://api.gapgpt.app/v1}
+      GAPGPT_CHAT_MODEL: ${GAPGPT_CHAT_MODEL:-gpt-4o-mini}
+      GAPGPT_EMBEDDING_MODEL: ${GAPGPT_EMBEDDING_MODEL:-text-embedding-3-small}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      OPENAI_BASE_URL: ${OPENAI_BASE_URL:-https://api.openai.com/v1}
+      OPENAI_ORGANIZATION_ID: ${OPENAI_ORGANIZATION_ID:-}
+      OPENAI_PROJECT_ID: ${OPENAI_PROJECT_ID:-}
+      OPENAI_CHAT_MODEL: ${OPENAI_CHAT_MODEL:-gpt-4o-mini}
+      OPENAI_EMBEDDING_MODEL: ${OPENAI_EMBEDDING_MODEL:-text-embedding-3-small}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+      DEEPSEEK_BASE_URL: ${DEEPSEEK_BASE_URL:-https://api.deepseek.com}
+      DEEPSEEK_CHAT_MODEL: ${DEEPSEEK_CHAT_MODEL:-deepseek-chat}
+      PAYMENT_CALLBACK_BASE_URL: ${PAYMENT_CALLBACK_BASE_URL:-}
+      ZARINPAL_MERCHANT_ID: ${ZARINPAL_MERCHANT_ID:-}
+      ZIBAL_MERCHANT_ID: ${ZIBAL_MERCHANT_ID:-}
+      PAYMENT_GATEWAY_MODE: ${PAYMENT_GATEWAY_MODE:-mock}
+      S3_ENDPOINT: ${S3_ENDPOINT:-}
+      S3_REGION: ${S3_REGION:-default}
+      S3_BUCKET: ${S3_BUCKET:-bizboard-staging}
+      S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID:-}
+      S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY:-}
+      S3_PUBLIC_BASE_URL: ${S3_PUBLIC_BASE_URL:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "4000:4000"
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:4000/api/v1/health').then(r=>r.json()).then(j=>process.exit(j.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+
+  worker:
+    image: ${IMAGE_REGISTRY}/worker:${IMAGE_TAG:-staging}
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+      WORKER_CONCURRENCY: ${WORKER_CONCURRENCY:-5}
+      SENTRY_DSN: ${SENTRY_DSN:-}
+    depends_on:
+      api:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  crawler:
+    image: ${IMAGE_REGISTRY}/crawler:${IMAGE_TAG:-staging}
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+      CRAWLER_CONCURRENCY: ${CRAWLER_CONCURRENCY:-2}
+      CRAWLER_USER_AGENT: ${CRAWLER_USER_AGENT:-BizboardBot/0.1}
+      CRAWLER_RESPECT_ROBOTS: ${CRAWLER_RESPECT_ROBOTS:-true}
+    depends_on:
+      api:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-bizboard}
+      POSTGRES_USER: ${POSTGRES_USER:-bizboard}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-bizboard} -d $${POSTGRES_DB:-bizboard}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  postgres_data:
+  redis_data:

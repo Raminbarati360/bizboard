@@ -1,0 +1,16 @@
+node_modules
+.pnpm-store
+.next
+dist
+coverage
+.env
+.env.*
+!.env.example
+!.env.production.example
+.DS_Store
+*.log
+.tmp
+postgres-data
+redis-data
+uploads
+backups

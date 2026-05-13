@@ -1,0 +1,943 @@
+مستند انتقال پروژه بیزبورد برای شروع مستقیم روی پارس‌پک
+نسخه: 1.1
+هدف: بردن کل کانتکست این چت به یک چت جدید و شروع اجرای پروژه از صفر روی پارس‌پک، بدون کار روی سیستم شخصی
+تاریخ: 2026-05-13
+به‌روزرسانی 1.1: تاکید صریح روی Node.js/NestJS به‌عنوان بک‌اند اصلی و شروع مستقیم روی پارس‌پک
+
+====================================================================
+1) وضعیت فعلی پروژه
+====================================================================
+کاربر هنوز هیچ کاری روی سیستم خودش انجام نداده است.
+مسیر جدید پروژه این است:
+- توسعه و اجرای اولیه مستقیم روی زیرساخت پارس‌پک انجام شود.
+- فعلاً نباید دستورهای local-first مثل نصب روی لپ‌تاپ، Docker Desktop، اجرای localhost و Cursor روی سیستم شخصی محور کار باشد.
+- بهتر است از یک Git repository، سرور/محیط پارس‌پک، Docker/Docker Compose، PostgreSQL، Redis و Object Storage استفاده شود.
+- اگر لازم شد کد تولید شود، باید به شکل monorepo آماده‌ی deploy روی پارس‌پک باشد.
+
+این مستند خلاصه کامل تصمیم‌های قبلی، معماری، دیتابیس، AI، پنل‌ها و مسیر شروع روی پارس‌پک است.
+
+تصمیم قطعی تکنولوژی بک‌اند:
+- بک‌اند اصلی پروژه حتماً Node.js است.
+- زبان بک‌اند TypeScript است.
+- فریم‌ورک بک‌اند NestJS است.
+- اپلیکیشن API در مسیر apps/api ساخته می‌شود.
+- Workerها، crawlerها، job queue و AI jobs هم با Node.js/TypeScript ساخته می‌شوند.
+- پروژه PHP، WordPress، Laravel، MySQL یا ساختار وردپرسی نیست.
+- هدف استقرار مستقیم روی پارس‌پک با Docker/Docker Compose است، نه اجرای local-first روی سیستم شخصی.
+
+
+====================================================================
+2) خلاصه محصول بیزبورد
+====================================================================
+بیزبورد قرار است از یک دایرکتوری ساده کسب‌وکار به یک «موتور تصمیم‌گیری، مقایسه و خرید هوشمند» تبدیل شود.
+
+هدف برای کاربر:
+- راحت‌تر محصول، فروشگاه، خدمت یا کسب‌وکار مناسب را پیدا کند.
+- با دستیار هوش مصنوعی وسط صفحه صحبت کند.
+- محصول‌ها، قیمت‌ها، فروشنده‌ها، نقدها و اعتبار فروشنده‌ها را مقایسه کند.
+- اگر فروشنده سایت دارد، به سایت فروشنده برود.
+- اگر فروشنده سایت ندارد، از مینی‌سایت بیزبورد خرید کند.
+
+هدف برای کسب‌وکار:
+- مشتری بگیرد.
+- صفحه/مینی‌سایت اختصاصی داشته باشد.
+- محصول و خدمت وارد کند.
+- برای سئو و AI بیزبورد صفحه خودش را بهینه کند.
+- تبلیغ کلیکی یا اسپانسر بگیرد.
+- اگر سایت ندارد، از طریق بیزبورد سفارش و پرداخت بگیرد.
+
+هسته نسخه قدیمی در پیچ‌دک:
+- مشکل ۱: سختی انتخاب و تصمیم‌گیری برای مردم.
+- مشکل ۲: هزینه بالای تبلیغات برای کسب‌وکارها.
+- راه‌حل قدیمی: اپ/سایت نقد و بررسی و امتیازدهی کسب‌وکارها.
+
+نسخه جدید:
+- AI-first
+- Product-first در فاز اول
+- SEO-first
+- Marketplace-ready
+- Crawler/Data ingestion-ready
+- قابل توسعه با AI programming
+
+====================================================================
+3) فازهای پروژه
+====================================================================
+فاز اول: محصول‌محور
+تمرکز روی محصول، فروشگاه، قیمت، موجودی، گارانتی، نقد، مقایسه، فروشنده و دستیار خرید AI.
+
+فاز دوم: همه کسب‌وکارها
+ورود دسته‌هایی مثل املاک، رستوران، کافه، پزشک، آموزشگاه، خدمات منزل، گردشگری، فروشگاه محلی، آنلاین‌شاپ و شرکت‌های B2B.
+
+فاز سوم: پلتفرم کامل مارکت‌پلیس و رتبه‌بندی
+سفارش مستقیم، کیف پول، تسویه فروشنده، تبلیغات، API فروشگاه‌ها، گزارش بازار و اعتبار فروشنده.
+
+====================================================================
+4) دسته‌های فاز اول
+====================================================================
+اولویت ۱:
+- موبایل
+- لپ‌تاپ
+- لوازم خانگی
+- هدفون/هندزفری
+- تلویزیون
+- زیبایی و سلامت مجاز
+
+اولویت ۲:
+- پوشاک
+- خانه و آشپزخانه
+- گیمینگ
+- مادر و کودک
+- ابزار
+
+اولویت ۳:
+- سوپرمارکت و خوراکی مجاز
+- لوازم جانبی خودرو
+- حیوانات خانگی
+- اداری و B2B سبک
+
+انواع کسب‌وکار فاز اول:
+- فروشگاه آنلاین دارای سایت مستقل
+- فروشنده بدون سایت با مینی‌سایت بیزبورد
+- فروشنده اینستاگرامی/تلگرامی که مینی‌سایت می‌خواهد
+- فروشگاه فیزیکی با فروش حضوری و ارسال
+- فروشگاه مارکت‌پلیسی
+- واردکننده/توزیع‌کننده رسمی
+- نمایندگی برند
+- فروشگاه تخصصی یک دسته
+- فروشگاه عمومی چنددسته‌ای
+
+====================================================================
+5) تصمیم‌های فنی اصلی
+====================================================================
+Backend اصلی پروژه:
+- Node.js به‌عنوان runtime اصلی بک‌اند
+- TypeScript برای کل بک‌اند
+- NestJS به‌عنوان فریم‌ورک API
+- REST API با Swagger/OpenAPI
+- Workerها با Node.js + BullMQ
+- Crawler اولیه با Node.js/TypeScript
+- AI Provider Gateway با Node.js و SDK/API سازگار با OpenAI
+- معماری Modular Monolith در شروع، قابل جدا شدن به سرویس‌های مستقل در آینده
+- ممنوع: PHP/WordPress/Laravel برای هسته پروژه
+- ممنوع: MySQL و ساختار wp_posts/wp_postmeta
+
+Frontend:
+- Next.js + React + TypeScript
+- SSR/SSG/ISR برای سئو
+- Tailwind CSS
+- RTL و فارسی‌سازی کامل
+
+Database:
+- PostgreSQL
+- نه MySQL
+- نه ساختار وردپرسی
+- نه wp_posts/wp_postmeta/wp_terms
+- افزونه‌های پیشنهادی:
+  - pgcrypto برای UUID
+  - pg_trgm برای سرچ فازی و فارسی
+  - pgvector برای embedding و semantic search
+  - PostGIS برای لوکیشن و نزدیک من
+  - btree_gin / btree_gist برای ایندکس‌های ترکیبی
+
+Cache/Queue:
+- Redis
+- BullMQ برای job queue، crawler، AI jobs، SEO jobs، import jobs
+
+Search در MVP:
+- PostgreSQL Full Text Search
+- pg_trgm
+- pgvector
+بعد از رشد:
+- OpenSearch / Elasticsearch / Meilisearch در صورت نیاز
+
+Object Storage:
+- فضای ابری S3-compatible پارس‌پک برای عکس محصول، لوگو، گالری، فایل‌های feed، خروجی crawler، backup سبک
+
+Deployment:
+- مستقیم روی پارس‌پک
+- گزینه پیشنهادی برای شروع: سرور ابری پارس‌پک + Docker Compose
+- در صورت استفاده از PaaS پارس‌پک، باید سرویس‌ها جدا تعریف شوند: web، api، worker، crawler، postgres، redis یا دیتابیس/ردیس جدا
+
+Monitoring:
+- Sentry برای خطا
+- لاگ ساختارمند JSON
+- Health check
+- در آینده Prometheus/Grafana یا سرویس مانیتورینگ
+
+====================================================================
+6) ساختار پیشنهادی Monorepo
+====================================================================
+/apps
+  /web              Next.js frontend
+  /api              NestJS backend
+  /worker           BullMQ workers
+  /crawler          crawler workers
+  /admin            فقط اگر admin جدا شود؛ در شروع می‌تواند داخل web باشد
+
+/packages
+  /ui               design system
+  /types            shared types
+  /db               schema, migrations, seed scripts
+  /config           shared config
+  /utils            Persian text normalization, slug, price utils
+  /ai               provider contracts, prompts, tools, evals
+  /seo              schema builders, sitemap generators
+
+Backend modules:
+- auth
+- users
+- businesses
+- products
+- offers
+- categories
+- search
+- ai
+- crawler
+- seo
+- orders
+- payments
+- payouts
+- reviews
+- ads
+- notifications
+- admin
+
+====================================================================
+7) دیتابیس؛ ساختار غیروردپرسی PostgreSQL
+====================================================================
+اصل مهم:
+بیزبورد نباید مثل WordPress/MySQL طراحی شود. هیچ ساختاری شبیه wp_posts، wp_postmeta، wp_terms و ذخیره همه‌چیز در key/value پذیرفته نیست.
+
+Schemaهای دیتابیس:
+
+auth:
+- users
+- user_profiles
+- roles
+- user_roles
+- sessions
+- otp_codes
+- business_members
+
+directory:
+- businesses
+- business_profiles
+- business_claims
+- business_locations
+- business_contacts
+- business_working_hours
+- business_mini_site_sections
+- business_external_links
+
+catalog:
+- categories
+- category_closure
+- attributes
+- category_attributes
+- attribute_options
+- brands
+- products
+- product_assets
+- product_variants
+- merchants
+- merchant_feeds
+- product_offers
+- price_history
+
+commerce:
+- carts
+- cart_items
+- orders
+- order_items
+- payment_attempts
+- shipments
+- order_confirmations
+- refunds
+- disputes
+
+finance:
+- ledger_accounts
+- ledger_entries
+- settlements
+- payout_batches
+- commissions
+- reconciliation_reports
+
+reviews:
+- reviews
+- review_votes
+- review_media
+- questions
+- answers
+- fraud_signals
+
+ai:
+- ai_conversations
+- ai_messages
+- ai_tool_calls
+- embeddings
+- ai_recommendation_logs
+- ai.providers
+- ai.provider_models
+- ai.provider_request_logs
+
+crawler:
+- sources
+- crawl_jobs
+- crawled_pages
+- raw_ingestion_items
+- entity_matches
+- import_queue
+
+seo:
+- seo_pages
+- seo_page_versions
+- keyword_clusters
+- internal_links
+- redirects
+- sitemap_urls
+
+ads:
+- ad_campaigns
+- ad_impressions
+- ad_clicks
+- promotion_slots
+- ad_billing_events
+
+analytics:
+- events
+- sessions
+- search_queries
+- zero_result_queries
+- conversion_events
+
+media:
+- media_assets
+- media_variants
+- galleries
+
+moderation:
+- moderation_items
+- reports
+- admin_audit_logs
+
+settings:
+- feature_flags
+- site_settings
+- gateway_settings
+
+====================================================================
+8) مدل محصول و فروشنده
+====================================================================
+اصل مهم:
+Product و Offer یکی نیستند.
+
+Product:
+محصول واقعی و canonical. مثلا «آیفون ۱۵ پرو مکس ۲۵۶ گیگ».
+
+Offer:
+پیشنهاد یک فروشگاه برای فروش همان محصول. یک محصول می‌تواند ۲۰ offer از ۲۰ فروشگاه داشته باشد.
+
+catalog.products:
+- id
+- category_id
+- brand_id
+- title
+- normalized_title
+- slug
+- model_number
+- gtin/ean/upc
+- description
+- ai_summary
+- specs jsonb
+- rating_avg
+- rating_count
+- min_price
+- max_price
+- offer_count
+- image_asset_id
+- status
+- canonical_product_id برای merge
+- search_vector
+- embedding
+
+catalog.product_offers:
+- id
+- product_id
+- variant_id
+- merchant_id
+- title_at_merchant
+- merchant_product_url
+- internal_checkout_enabled
+- price
+- old_price
+- currency IRR
+- availability
+- warranty
+- shipping_info jsonb
+- seller_sku
+- last_seen_at
+- data_source_id
+- status
+
+فروشنده دارای سایت:
+- merchant_product_url فعال است.
+- کاربر می‌تواند مثل ترب به سایت فروشنده برود.
+
+فروشنده بدون سایت:
+- internal_checkout_enabled=true
+- خرید داخل بیزبورد انجام می‌شود.
+
+====================================================================
+9) مینی‌سایت کسب‌وکار
+====================================================================
+هر کسب‌وکار باید یک مینی‌سایت در بیزبورد داشته باشد.
+
+URL پیشنهادی:
+- /b/{businessSlug}
+- /shop/{businessSlug}
+- بعداً برای لوکال: /city/{citySlug}/{categorySlug}/{businessSlug}
+
+بخش‌های مینی‌سایت:
+- کاور و لوگو
+- نام، امتیاز، نشان تایید
+- توضیح کوتاه سئو شده
+- درباره کسب‌وکار
+- محصولات/خدمات
+- گالری
+- ساعات کاری
+- آدرس و نقشه
+- تلفن، ایمیل، واتساپ، شبکه‌های اجتماعی
+- لینک سایت رسمی فروشنده
+- نقد و بررسی
+- Q&A
+- FAQ
+- پیشنهادهای ویژه
+- پرداخت/سفارش داخل بیزبورد برای فروشندگان بدون سایت
+- CTA برای claim صفحه
+
+فیلدهای مهم استخراج‌شده از MyListing قدیمی که باید در مدل جدید پوشش داده شوند:
+- عنوان
+- slug انگلیسی/پیوند یکتا
+- توضیحات
+- توضیح کوتاه سئو
+- دسته‌بندی
+- امکانات
+- لوگو
+- گالری
+- ساعات کاری
+- ایمیل
+- تلفن
+- منطقه
+- آدرس نوشتاری
+- موقعیت نقشه
+- وب‌سایت
+- شبکه‌های اجتماعی
+- منو/کاتالوگ
+- رزرو یا CTA اختصاصی
+
+====================================================================
+10) AI Assistant و Provider Gateway
+====================================================================
+بخش AI باید provider-agnostic باشد.
+یعنی منطق بیزبورد نباید به GapGPT، OpenAI، DeepSeek یا هیچ سرویس خاصی قفل شود.
+
+وضعیت فعلی موردنظر:
+- فعلاً استفاده از GapGPT
+- بعداً امکان اضافه کردن OpenAI
+- بعداً امکان اضافه کردن DeepSeek
+- بعداً امکان اضافه کردن هر API سازگار با OpenAI API یا providerهای دیگر
+
+قانون طلایی:
+هیچ جای پروژه مستقیم OpenAI/GapGPT/DeepSeek را صدا نزند.
+همه درخواست‌ها باید از AiRouterService عبور کنند.
+
+ساختار پیشنهادی:
+
+apps/api/src/modules/ai
+  ai.module.ts
+  ai.controller.ts
+  ai.service.ts
+  ai-router.service.ts
+  ai-provider-registry.ts
+  ai-usage-logger.service.ts
+
+packages/ai
+  src/contracts
+    ai-provider.interface.ts
+    ai-message.types.ts
+    ai-tool.types.ts
+    ai-response.types.ts
+  src/providers
+    openai-compatible.provider.ts
+    gapgpt.provider.ts
+    openai.provider.ts
+    deepseek.provider.ts
+  src/prompts
+    shopping-assistant.prompt.ts
+    seo-agent.prompt.ts
+    data-quality-agent.prompt.ts
+  src/tools
+    search-products.tool.ts
+    compare-products.tool.ts
+    get-product-offers.tool.ts
+
+Env پیشنهادی:
+
+AI_DEFAULT_PROVIDER=gapgpt
+AI_DEFAULT_CHAT_MODEL=gpt-4o-mini
+AI_DEFAULT_EMBEDDING_PROVIDER=gapgpt
+AI_DEFAULT_EMBEDDING_MODEL=text-embedding-3-small
+AI_ALLOW_PROVIDER_FALLBACK=false
+AI_LOG_PROMPTS=true
+AI_LOG_RESPONSES=false
+AI_REQUEST_TIMEOUT_MS=60000
+AI_MAX_RETRIES=2
+
+GAPGPT_API_KEY=
+GAPGPT_BASE_URL=https://api.gapgpt.app/v1
+GAPGPT_CHAT_MODEL=gpt-4o-mini
+GAPGPT_EMBEDDING_MODEL=text-embedding-3-small
+
+OPENAI_API_KEY=
+OPENAI_BASE_URL=https://api.openai.com/v1
+OPENAI_ORGANIZATION_ID=
+OPENAI_PROJECT_ID=
+OPENAI_CHAT_MODEL=gpt-4o-mini
+OPENAI_EMBEDDING_MODEL=text-embedding-3-small
+
+DEEPSEEK_API_KEY=
+DEEPSEEK_BASE_URL=https://api.deepseek.com
+DEEPSEEK_CHAT_MODEL=deepseek-chat
+
+نکات امنیتی AI:
+- API keyها فقط در server/env باشند.
+- هیچ کلیدی وارد frontend نشود.
+- request id، latency، usage، provider، model و status لاگ شود.
+- fallback فعلاً خاموش باشد؛ چون ممکن است داده کاربر بدون اطلاع به provider دیگر برود.
+- خروجی JSON دستیار خرید باید validate شود.
+- AI نباید قیمت یا موجودی نامطمئن را قطعی اعلام کند.
+- تبلیغ و پیشنهاد ارگانیک باید جدا و شفاف باشند.
+
+ابزارهای داخلی AI:
+- search_products(query, filters)
+- compare_products(product_ids)
+- get_product_offers(product_id)
+- get_price_history(product_id)
+- search_businesses(query, location, filters)
+- get_business_profile(business_id)
+- create_compare_list(items)
+- create_price_alert(product_id, target_price)
+- start_checkout(offer_id)
+- track_outbound_click(offer_id)
+
+====================================================================
+11) AI-Buildable Development
+====================================================================
+پروژه باید طوری ساخته شود که همیشه AI بتواند برنامه‌نویسی کند و کاربر فقط با زبان ساده فیچر اضافه کند.
+
+فایل‌های ضروری:
+- docs/ai/AI_CONTEXT.md
+- docs/ai/AI_CODING_RULES.md
+- docs/ai/AI_PROVIDER_ARCHITECTURE.md
+- docs/api/openapi.yaml
+- docs/database/001_initial_schema.sql
+- docs/frontend/wireframes.md
+- docs/panels/admin_panel_scope.md
+- docs/panels/business_panel_scope.md
+- docs/feature-request-template.md
+
+قوانین توسعه با AI:
+- AI قبل از کدنویسی باید Technical Plan بدهد.
+- هر تغییر دیتابیس باید migration داشته باشد.
+- هر API باید در OpenAPI به‌روز شود.
+- هر فیچر باید تست پایه داشته باشد.
+- هیچ جدول key/value شبیه وردپرس ساخته نشود.
+- هیچ provider AI مستقیم در business logic صدا زده نشود.
+- هیچ secret در repo commit نشود.
+- هر PR باید checklist داشته باشد.
+
+قالب درخواست فیچر:
+1. هدف فیچر چیست؟
+2. کاربر هدف کیست؟
+3. صفحه یا API درگیر چیست؟
+4. مدل داده جدید لازم دارد؟
+5. قوانین امنیتی/مالی/حقوقی دارد؟
+6. خروجی مورد انتظار چیست؟
+7. معیار پذیرش چیست؟
+
+====================================================================
+12) صفحات Frontend اصلی
+====================================================================
+صفحه اصلی:
+- AI chat وسط صفحه
+- پیام اصلی: «چی می‌خوای بخری یا کدوم کسب‌وکار رو پیدا کنی؟»
+- سرچ کلاسیک کنار چت
+- دسته‌های محبوب
+- پیشنهادهای ترند
+- بهترین قیمت‌ها
+- فروشنده‌های معتبر
+
+صفحه دسته محصول:
+- H1 دقیق
+- intro کوتاه انسانی
+- فیلترها
+- لیست محصولات
+- جدول بهترین‌ها
+- راهنمای خرید
+- مقایسه برندها
+- FAQ
+- لینک داخلی
+- schema مناسب
+
+صفحه محصول:
+- عنوان استاندارد
+- عکس‌ها
+- خلاصه AI
+- مشخصات فنی
+- قیمت‌ها و فروشنده‌ها
+- تاریخچه قیمت
+- مقایسه با محصولات مشابه
+- نقد کاربران
+- Q&A
+- CTA خرید از فروشگاه یا خرید امن بیزبورد
+
+صفحه کسب‌وکار/فروشگاه:
+- مینی‌سایت کامل
+- محصولات
+- نقدها
+- تماس
+- لینک سایت رسمی
+- پرداخت داخلی برای فروشنده بدون سایت
+
+صفحه مقایسه:
+- مقایسه محصول با محصول
+- مقایسه فروشگاه با فروشگاه
+- خلاصه AI
+
+پنل کسب‌وکار:
+- پروفایل
+- محصولات
+- فیدها
+- سفارش‌ها
+- پیام‌ها
+- نقدها
+- آمار
+- تبلیغات
+- مالی و تسویه
+- AI SEO Coach
+
+پنل ادمین:
+- Dashboard KPI
+- Users
+- Businesses
+- Products
+- Offers
+- Categories
+- Attributes
+- Crawlers
+- Raw data review
+- SEO pages
+- AI outputs review
+- Orders
+- Payments
+- Payouts
+- Disputes
+- Reviews moderation
+- Ads
+- Reports
+- Settings
+- Feature flags
+- Audit logs
+- AI provider management
+- AI cost dashboard
+
+====================================================================
+13) پرداخت، escrow، ledger و تسویه
+====================================================================
+فعلاً درگاه‌های هدف:
+- زرین‌پال
+- زیبال
+
+قانون مالی:
+- پول کاربر ابتدا به حساب بیزبورد می‌آید.
+- در ledger داخلی به escrow ثبت می‌شود.
+- تا زمانی که مشتری ارسال کالا/ارائه خدمت را تایید نکرده یا بازه اعتراض تمام نشده، پول درآمد فروشنده نیست.
+- بعد از تایید، کارمزد بیزبورد جدا می‌شود.
+- باقی‌مانده به payable فروشنده منتقل می‌شود.
+- تسویه فقط بعد از KYC/KYB و کنترل مالی انجام می‌شود.
+
+نکات حیاتی:
+- payment callback باید idempotent باشد.
+- پرداخت فقط با callback query تایید نشود؛ verify server-to-server الزامی است.
+- ledger باید double-entry باشد.
+- gateway reconciliation روزانه لازم است.
+- dispute/refund باید از ابتدا در مدل داده دیده شود، حتی اگر در MVP ساده باشد.
+
+====================================================================
+14) SEO و crawler
+====================================================================
+هدف SEO:
+برای هر intent مهم، صفحه‌ای مفید، سریع، ساختاریافته و قابل crawl ساخته شود.
+
+هیچ کس نمی‌تواند رتبه ۱ گوگل را تضمین کند، ولی باید معماری طوری باشد که شانس رتبه‌گیری بالا برود و ریسک پنالتی کم شود.
+
+قالب صفحات SEO:
+- دسته محصول
+- برند + دسته
+- محصول canonical
+- مقایسه محصول‌ها
+- بهترین‌ها مثل «بهترین گوشی تا ۳۰ میلیون»
+- فروشگاه معتبر
+- صفحه محلی در فاز دوم
+
+Crawler/Data ingestion:
+- قرار نیست بدون مجوز کل اینترنت کپی شود.
+- باید robots.txt، قوانین سایت‌ها و قراردادها رعایت شود.
+- مسیرهای ورودی دیتا:
+  - Merchant feed
+  - API فروشگاه
+  - CSV/XML/JSON
+  - sitemap crawl با مجوز
+  - JSON-LD extraction
+  - Manual entry
+  - Admin import
+  - Claim & correction
+
+کیفیت دیتا:
+- raw data مستقیم publish نشود.
+- quality_score لازم است.
+- محصول تکراری باید merge شود.
+- قیمت باید last_seen_at داشته باشد.
+- صفحات ضعیف یا تکراری noindex شوند.
+
+====================================================================
+15) مسیر شروع مستقیم روی پارس‌پک
+====================================================================
+چون کاربر می‌خواهد مستقیم روی پارس‌پک شروع کند، مسیر پیشنهادی این است:
+
+گزینه پیشنهادی برای MVP:
+- یک سرور ابری پارس‌پک برای staging
+- Docker + Docker Compose روی همان سرور
+- Git repository برای کد
+- دامنه/subdomain برای staging
+- PostgreSQL و Redis داخل Docker در شروع، یا سرویس جدا اگر پارس‌پک/زیرساخت انتخابی آماده دارد
+- Object Storage پارس‌پک برای فایل‌ها
+- SSL با Caddy/Nginx/Reverse proxy
+
+دامنه‌های پیشنهادی staging:
+- staging.bizboard.co برای frontend
+- api-staging.bizboard.co برای backend
+- admin-staging.bizboard.co فقط اگر admin جدا شد؛ در شروع لازم نیست
+
+سرویس‌های Docker Compose روی پارس‌پک:
+- web: Next.js روی Node.js
+- api: NestJS API روی Node.js
+- worker: Node.js BullMQ workers
+- crawler: Node.js crawler workers
+- postgres: PostgreSQL
+- redis: Redis
+- reverse-proxy: Caddy یا Nginx
+
+نکته مهم:
+همه سرویس‌های application-level یعنی web، api، worker و crawler با Node.js اجرا می‌شوند. تنها سرویس‌های غیر Node.js دیتابیس، Redis و reverse proxy هستند.
+
+اولین خروجی قابل قبول روی پارس‌پک:
+- صفحه web باز شود.
+- api health جواب دهد.
+- Swagger باز شود.
+- دیتابیس migrate شده باشد.
+- seed دسته‌بندی‌ها انجام شده باشد.
+- صفحه اصلی AI-first با چت mock باز شود.
+- چند محصول، فروشنده و offer نمونه دیده شود.
+- envها امن و جدا از repo باشند.
+
+URLهای هدف:
+- https://staging.bizboard.co
+- https://api-staging.bizboard.co/api/v1/health
+- https://api-staging.bizboard.co/api/docs
+
+====================================================================
+16) ترتیب Sprintها برای ساخت MVP
+====================================================================
+Sprint 0: زیرساخت پارس‌پک و اسکلت پروژه
+- ساخت Git repository
+- ساخت monorepo
+- Dockerfileها
+- docker-compose.staging.yml
+- env.example
+- deploy روی سرور پارس‌پک
+- health check
+- Swagger
+- اتصال DB/Redis
+
+Sprint 1: دیتابیس و seed
+- migrations اولیه PostgreSQL
+- schemaها
+- categories
+- attributes
+- products نمونه
+- businesses نمونه
+- offers نمونه
+
+Sprint 2: API پایه
+- auth ساده
+- categories API
+- products API
+- offers API
+- businesses API
+- Swagger کامل‌تر
+
+Sprint 3: frontend پایه
+- صفحه اصلی AI-first
+- صفحه دسته
+- صفحه محصول
+- صفحه فروشگاه/مینی‌سایت
+
+Sprint 4: پنل کسب‌وکار پایه
+- ساخت پروفایل
+- افزودن محصول
+- افزودن offer
+- مدیریت عکس
+
+Sprint 5: پنل ادمین پایه
+- مدیریت کاربران
+- مدیریت کسب‌وکارها
+- مدیریت محصولات
+- مدیریت offerها
+- audit log پایه
+
+Sprint 6: سرچ و فیلتر
+- search_vector
+- pg_trgm
+- فیلتر دسته، برند، قیمت، موجودی، فروشنده
+
+Sprint 7: AI Assistant نسخه اول
+- GapGPT به عنوان default provider
+- AiRouterService
+- tool search_products
+- tool compare_products
+- چت وسط صفحه
+- پاسخ ساختاریافته برای UI
+
+Sprint 8: SEO پایه
+- sitemap
+- robots
+- canonical
+- JSON-LD برای Product/Offer
+- صفحات دسته indexable
+
+Sprint 9: پرداخت تستی
+- زرین‌پال/زیبال sandbox یا تست
+- payment_attempts
+- order
+- ledger ساده اما درست
+
+Sprint 10: crawler/import پایه
+- CSV import
+- feed ساده
+- raw_ingestion_items
+- quality review
+
+====================================================================
+17) چک‌لیست Go/No-Go قبل از لانچ staging
+====================================================================
+Go اگر:
+- deploy روی پارس‌پک پایدار است.
+- DB migration تکرارپذیر است.
+- backup اولیه تعریف شده است.
+- envها در repo نیستند.
+- API health و Swagger کار می‌کند.
+- seed data انجام شده است.
+- صفحه اصلی، دسته، محصول، کسب‌وکار باز می‌شوند.
+- لاگ خطا وجود دارد.
+- AI key فقط backend است.
+- حداقل security headers فعال است.
+
+No-Go اگر:
+- secret داخل repo است.
+- دیتابیس با ساختار وردپرسی/متا ساخته شده است.
+- AI مستقیم از frontend صدا زده می‌شود.
+- payment بدون verify طراحی شده است.
+- migrationها دستی و غیرقابل تکرارند.
+- لاگ و health check وجود ندارد.
+- صفحات محصول canonical ندارند.
+
+====================================================================
+18) پرامپت آماده برای چت جدید
+====================================================================
+این متن را در چت جدید بده و همین فایل را هم upload کن:
+
+«این مستند انتقال پروژه بیزبورد است. من می‌خواهم پروژه را از صفر مستقیم روی پارس‌پک شروع کنم، نه روی سیستم خودم.
+
+لطفاً اول کل مستند را بخوان و بعد یک پلن اجرایی بده برای اینکه روی پارس‌پک staging را بالا بیاوریم.
+
+قوانین:
+1. مسیر local-first نده؛ من فعلاً روی سیستم خودم کاری نکرده‌ام.
+2. هدف اول ساخت staging روی پارس‌پک است.
+3. پروژه باید monorepo باشد: Next.js frontend روی Node.js، NestJS backend روی Node.js/TypeScript، PostgreSQL، Redis، Node.js worker، Node.js crawler.
+4. دیتابیس باید PostgreSQL غیروردپرسی باشد؛ wp_posts/wp_postmeta ممنوع.
+5. AI باید provider-agnostic باشد؛ فعلاً GapGPT default باشد و بعداً OpenAI و DeepSeek اضافه شوند.
+6. هیچ API key نباید وارد frontend یا repo شود.
+7. قبل از کدنویسی Technical Plan بده.
+8. فایل‌هایی که باید بسازی را لیست کن.
+9. بعد از پلن، اسکلت Node.js deploy-ready برای پارس‌پک بساز: Dockerfileهای web/api/worker/crawler، docker-compose.staging.yml، env.example، README deployment، health check، Swagger، migration اولیه، seed اولیه، صفحه اصلی mock.
+10. اگر جایی به اطلاعات حساب پارس‌پک، دامنه یا secret نیاز داشتی، فقط اسم متغیرها را بگو و مقدار واقعی را از من نخواه داخل کد بنویسم.»
+
+====================================================================
+19) اولین چیزهایی که در چت جدید باید از AI خواسته شود
+====================================================================
+در چت جدید مرحله اول این باشد:
+
+- ساخت ساختار monorepo
+- ساخت Dockerfile برای web و api
+- ساخت docker-compose.staging.yml مناسب پارس‌پک/سرور ابری
+- ساخت Caddyfile یا Nginx config برای staging.bizboard.co و api-staging.bizboard.co
+- ساخت NestJS health endpoint: /api/v1/health
+- ساخت Swagger: /api/docs
+- ساخت migration اولیه schemaها
+- ساخت seed دسته‌های فاز اول
+- ساخت Next.js home page با chat mock وسط صفحه
+- ساخت README_DEPLOY_PARSPACK.md
+
+نباید از ابتدا کل پروژه ساخته شود. اول باید staging سالم و قابل deploy ساخته شود.
+
+====================================================================
+20) نکته‌های شخصی‌سازی‌شده برای ادامه
+====================================================================
+- کاربر می‌خواهد «با AI پروژه را بسازد»، یعنی پروژه باید برای توسعه دائمی توسط AI چیده شود.
+- کاربر فقط می‌خواهد بعداً فیچر را با AI اضافه کند.
+- پس باید docs، OpenAPI، migrations، coding rules و feature template از روز اول داخل repo باشند.
+- تمرکز اولیه روی بالا آوردن عملی پروژه روی پارس‌پک است.
+- توضیح‌های خیلی پراکنده و local-first نباید مسیر را گم کند.
+- خروجی‌های هر مرحله باید قابل تست روی دامنه staging باشند.
+
+پایان مستند.
+
+
+====================================================================
+21) تاکید نهایی: Node.js در اجرای پروژه
+====================================================================
+در چت جدید نباید پروژه با PHP، وردپرس، MySQL یا stack متفرقه شروع شود.
+مسیر صحیح این است:
+- apps/web: Next.js + React + TypeScript روی Node.js
+- apps/api: NestJS + TypeScript روی Node.js
+- apps/worker: Node.js + BullMQ برای jobها
+- apps/crawler: Node.js/TypeScript برای crawler و ingestion
+- packages/ai: AI Provider Gateway قابل اتصال به GapGPT، OpenAI و DeepSeek
+- packages/db: migration و schemaهای PostgreSQL
+- PostgreSQL به‌عنوان دیتابیس اصلی
+- Redis برای cache و queue
+- Docker Compose برای استقرار مستقیم روی پارس‌پک
+
+اولین خروجی فنی که باید در چت جدید ساخته شود:
+1. Dockerfile برای apps/api با Node.js
+2. Dockerfile برای apps/web با Node.js
+3. docker-compose.staging.yml برای پارس‌پک
+4. NestJS health endpoint: /api/v1/health
+5. Swagger/OpenAPI در /api/docs
+6. اتصال NestJS به PostgreSQL و Redis
+7. migration اولیه PostgreSQL
+8. صفحه Next.js اولیه با چت AI mock
+9. env.example شامل GAPGPT_API_KEY و GAPGPT_BASE_URL
+10. README استقرار روی پارس‌پک

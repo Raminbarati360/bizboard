@@ -1,0 +1,19 @@
+{
+  "name": "bizboard",
+  "private": true,
+  "version": "0.1.0-phase0",
+  "packageManager": "pnpm@9.0.0",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "test": "turbo test",
+    "format": "prettier --write ."
+  },
+  "devDependencies": {
+    "turbo": "latest",
+    "typescript": "latest",
+    "prettier": "latest"
+  }
+}

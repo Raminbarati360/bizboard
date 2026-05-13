@@ -1,0 +1,51 @@
+erDiagram
+  auth_users ||--o{ auth_user_roles : has
+  auth_roles ||--o{ auth_user_roles : grants
+  auth_users ||--o{ directory_businesses : owns
+  directory_businesses ||--|| directory_business_profiles : has
+  directory_businesses ||--o{ directory_business_locations : has
+  directory_businesses ||--o{ directory_business_contacts : has
+  directory_businesses ||--o{ directory_business_mini_site_sections : has
+  directory_businesses ||--o{ directory_business_claims : claimed_by
+
+  catalog_categories ||--o{ catalog_categories : parent_of
+  catalog_categories ||--o{ catalog_products : contains
+  catalog_brands ||--o{ catalog_products : brands
+  catalog_products ||--o{ catalog_product_assets : has
+  catalog_products ||--o{ catalog_product_variants : has
+  directory_businesses ||--o{ catalog_merchants : operates
+  catalog_products ||--o{ catalog_product_offers : has
+  catalog_merchants ||--o{ catalog_product_offers : sells
+  catalog_product_offers ||--o{ catalog_price_history : tracks
+  catalog_attributes ||--o{ catalog_category_attributes : used_by
+  catalog_categories ||--o{ catalog_category_attributes : defines
+  catalog_attributes ||--o{ catalog_product_attribute_values : values
+  catalog_products ||--o{ catalog_product_attribute_values : has
+
+  commerce_orders ||--o{ commerce_order_items : contains
+  auth_users ||--o{ commerce_orders : places
+  catalog_product_offers ||--o{ commerce_order_items : purchased
+  commerce_orders ||--o{ commerce_payment_attempts : paid_by
+  commerce_orders ||--o{ commerce_disputes : may_have
+  commerce_orders ||--o{ commerce_refunds : may_have
+  commerce_orders ||--o{ commerce_order_confirmations : confirmed_by
+
+  finance_ledger_accounts ||--o{ finance_ledger_entries : records
+  directory_businesses ||--o{ finance_settlements : requests
+
+  reviews_reviews }o--|| auth_users : written_by
+  reviews_reviews }o--o| catalog_products : targets_product
+  reviews_reviews }o--o| directory_businesses : targets_business
+
+  ai_conversations ||--o{ ai_messages : contains
+  ai_conversations ||--o{ ai_tool_calls : uses
+  ai_documents ||--o{ ai_document_chunks : chunked
+
+  crawler_sources ||--o{ crawler_crawl_jobs : schedules
+  crawler_sources ||--o{ crawler_crawled_pages : has
+  crawler_crawled_pages ||--o{ crawler_entity_candidates : extracts
+
+  seo_pages ||--o{ seo_page_versions : versions
+  seo_pages ||--o{ seo_internal_links : links
+
+  media_assets ||--o{ catalog_product_assets : used_in

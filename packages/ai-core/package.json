@@ -1,0 +1,17 @@
+{
+  "name": "@bizboard/ai-core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "echo 'lint ai-core'",
+    "test": "echo 'test ai-core'"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}

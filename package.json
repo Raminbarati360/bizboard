@@ -1,0 +1,25 @@
+{
+  "name": "bizboard",
+  "private": true,
+  "version": "0.1.2-paas-only",
+  "packageManager": "pnpm@9.15.4",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "test": "turbo test",
+    "format": "prettier --write .",
+    "db:migrate": "pnpm --filter @bizboard/database migrate",
+    "db:seed": "pnpm --filter @bizboard/database seed",
+    "docker:paas:config": "docker compose -f docker-compose.paas.yml config",
+    "docker:paas:config:infra": "docker compose -f infra/parspack/docker-compose.parspack.yml config"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.1",
+    "eslint": "^9.20.1",
+    "prettier": "^3.5.1",
+    "turbo": "^2.4.2",
+    "typescript": "^5.7.3"
+  }
+}
