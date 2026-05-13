@@ -5,7 +5,7 @@
   "packageManager": "pnpm@9.15.4",
   "scripts": {
     "dev": "turbo dev",
-    "build": "npm install -g pnpm@9.15.4 && pnpm install --no-frozen-lockfile && pnpm --filter './packages/**' build && pnpm --filter @bizboard/api build",
+    "build": "npm install -g pnpm@9.15.4 && pnpm install --filter '@bizboard/api...' --no-frozen-lockfile && pnpm --filter '@bizboard/api...' build",
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
     "test": "turbo test",
