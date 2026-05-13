@@ -2,11 +2,9 @@ const { spawnSync } = require('child_process');
 
 console.log('Starting Bizboard API on ParsPack PaaS...');
 
-spawnSync('corepack', ['enable'], { stdio: 'inherit' });
-
 const result = spawnSync(
-  'pnpm',
-  ['--filter', '@bizboard/api', 'start:prod'],
+  'node',
+  ['apps/api/dist/main.js'],
   { stdio: 'inherit' }
 );
 

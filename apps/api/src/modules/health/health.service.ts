@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import IORedis from 'ioredis';
+import { Redis } from 'ioredis';
 import { healthcheckDatabase } from '@bizboard/database';
 
 @Injectable()
@@ -31,7 +31,7 @@ export class HealthService {
 
   private async checkRedis() {
     if (!process.env.REDIS_URL) return { ok: false, skipped: true, reason: 'REDIS_URL is not set' };
-    const redis = new IORedis(process.env.REDIS_URL, { lazyConnect: true, maxRetriesPerRequest: 1 });
+    const redis = new Redis(process.env.REDIS_URL, { lazyConnect: true, maxRetriesPerRequest: 1 });
     try {
       await redis.connect();
       const pong = await redis.ping();

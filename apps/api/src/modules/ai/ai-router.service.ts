@@ -15,7 +15,7 @@ export class AiRouterService {
     const requestId = crypto.randomUUID();
     const startedAt = Date.now();
     const provider = this.registry.getDefaultProvider();
-    const model = this.registry.modelFor(provider.name);
+    const model = this.registry.modelFor();
     const messages: AiMessage[] = [
       { role: 'system', content: SHOPPING_ASSISTANT_SYSTEM_PROMPT },
       { role: 'user', content: userMessage }
