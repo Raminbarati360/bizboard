@@ -5,7 +5,7 @@
   "packageManager": "pnpm@9.15.4",
   "scripts": {
     "dev": "turbo dev",
-    "build": "turbo build",
+    "build": "corepack enable && pnpm install --frozen-lockfile && pnpm --filter @bizboard/api build",
     "lint": "turbo lint",
     "typecheck": "turbo typecheck",
     "test": "turbo test",
@@ -13,7 +13,8 @@
     "db:migrate": "pnpm --filter @bizboard/database migrate",
     "db:seed": "pnpm --filter @bizboard/database seed",
     "docker:paas:config": "docker compose -f docker-compose.paas.yml config",
-    "docker:paas:config:infra": "docker compose -f infra/parspack/docker-compose.parspack.yml config"
+    "docker:paas:config:infra": "docker compose -f infra/parspack/docker-compose.parspack.yml config",
+    "start": "corepack enable && pnpm --filter @bizboard/api start:prod"
   },
   "devDependencies": {
     "@types/node": "^22.13.1",
